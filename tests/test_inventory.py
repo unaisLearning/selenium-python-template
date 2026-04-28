@@ -1,0 +1,36 @@
+from pages.inventory_page import InventoryPage
+from pages.login_page import LoginPage
+import pytest
+
+def test_page_title(logged_in_user):
+    assert logged_in_user.get_page_title() == "Products"
+
+def test_add_single_item_to_cart(logged_in_user):
+    logged_in_user.add_to_cart()
+    assert logged_in_user.get_cart_count() == "1"
+
+def test_remove_item_from_cart(logged_in_user):
+    logged_in_user.add_to_cart()
+    logged_in_user.remove_item_from_cart()
+    assert not logged_in_user.is_cart_badge_displayed()
+
+def test_logout(logged_in_user):
+    login_page = logged_in_user.logout_account()
+    assert login_page.driver.title == "Swag Labs"
+
+
+def test_filter_price_low_to_high(logged_in_user):
+    logged_in_user.sort_products("lohi")  # ✅ Sort first
+    assert logged_in_user.get_current_sort_value() == "lohi"
+
+def test_filter_price_high_to_low(logged_in_user):
+    logged_in_user.sort_products("hilo")  # ✅ Sort first
+    assert logged_in_user.get_current_sort_value() == "hilo"
+
+def test_filter_price_A_to_Z(logged_in_user):
+    logged_in_user.sort_products("az")  # ✅ Sort first
+    assert logged_in_user.get_current_sort_value() == "az"
+
+def test_filter_price_Z_to_A(logged_in_user):
+    logged_in_user.sort_products("za")  # ✅ Sort first
+    assert logged_in_user.get_current_sort_value() == "za"
